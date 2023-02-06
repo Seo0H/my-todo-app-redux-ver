@@ -45,15 +45,23 @@ const Footer = styled.div`
 `;
 
 const textMap = {
-    login: "로그인",
-    register: "회원가입",
-  };
+  login: "로그인",
+  register: "회원가입",
+};
+
+// 로그인-회원가입 handler
+const changeMode = (e) => {
+  e.preventDefault();
+
+};
 
 // type : login, register 구분
 // form: user name, password, passwordConfirm
 // onChange
 const AuthForm = ({ type, form, onChange, onSubmit }) => {
-  const text = textMap[type];
+  let [stateType, setStateType] = useState(type);
+  const text = textMap[stateType];
+
   console.log(text);
   return (
     <AuthFormBlock>
@@ -74,13 +82,24 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
           value={form.password}
           onchange={onChange}
         />
+        {stateType === "register" && (
+          <StyledInput
+            autoComplete="new-password"
+            name="passwordConfirm"
+            placeholder="비밀번호 확인"
+            type="password"
+            onChange={onChange}
+            value={form.passwordConfirm}
+          />
+        )}
         <Button>로그인</Button>
       </form>
 
       <Footer>
-        {type === "login" ? (
-          <Link to="/register">회원가입</Link>
+        {stateType === "login" ? (
+          <button onClick={changeMode} > 회원가입 </button>
         ) : (
+          // <Link to="/register">회원가입</Link>
           <Link to="/login">로그인</Link>
         )}
       </Footer>
