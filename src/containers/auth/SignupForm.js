@@ -21,6 +21,7 @@ const LoginForm = () => {
   useEffect(() => {
     form.email = "";
     form.password = "";
+    form.passwordConfirm = "";
   },[]);
 
   return (
