@@ -52,18 +52,18 @@ const textMap = {
 // type : signup, signup 구분
 // form: user name, password, passwordConfirm
 // onChange
-const AuthForm = ({ type, form, onChange, onSubmit }) => {
+const AuthForm = ({ type, form, onBlur, onSubmit, valid }) => {
   const text = textMap[type];
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} >
         <StyledInput
           data-testid="email-input"
           autoComplete="email"
           name="email"
           placeholder="이메일"
-          onChange={onChange}
+          onBlur={onBlur}
           defaltvalue={form.email}
         />
         <StyledInput
@@ -73,7 +73,7 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
           type="password"
           placeholder="비밀번호"
           defaltvalue={form.password}
-          onchange={onChange}
+          onBlur={onBlur}
         />
         {type === "signup" && (
           <StyledInput
@@ -81,17 +81,17 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
             name="passwordConfirm"
             placeholder="비밀번호 확인"
             type="password"
-            onChange={onChange}
+            onBlur={onBlur}
             defaltvalue={form.passwordConfirm}
           />
         )}
         {/* 나중에 이부분 js로 수정해도 될듯... */}
         {type === "signup" ? (
-          <StyledButton fullWidth data-testid="signup-button">
+          <StyledButton onSubmit={onSubmit} fullWidth data-testid="signup-button" disabled={!valid}>
             회원가입
           </StyledButton>
         ) : (
-          <StyledButton fullWidth data-testid="signin-button">
+          <StyledButton onSubmit={onSubmit} fullWidth data-testid="signin-button" disabled={!valid}>
             로그인
           </StyledButton>
         )}
