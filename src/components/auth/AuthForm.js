@@ -49,18 +49,18 @@ const textMap = {
   register: "회원가입",
 };
 
-// 로그인-회원가입 handler
-const changeMode = (e) => {
-  e.preventDefault();
-
-};
-
 // type : login, register 구분
 // form: user name, password, passwordConfirm
 // onChange
 const AuthForm = ({ type, form, onChange, onSubmit }) => {
   let [stateType, setStateType] = useState(type);
   const text = textMap[stateType];
+
+  // 로그인-회원가입 handler
+  const changeMode = (e) => {
+    e.preventDefault();
+    setStateType("register");
+  };
 
   console.log(text);
   return (
@@ -72,14 +72,14 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
           name="email"
           placeholder="이메일"
           onChange={onChange}
-          value={form.email}
+          defaltvalue={form.email}
         />
         <StyledInput
           autoComplete="password"
           name="password"
           type="password"
           placeholder="비밀번호"
-          value={form.password}
+          defaltvalue={form.password}
           onchange={onChange}
         />
         {stateType === "register" && (
@@ -89,7 +89,7 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
             placeholder="비밀번호 확인"
             type="password"
             onChange={onChange}
-            value={form.passwordConfirm}
+            defaltvalue={form.passwordConfirm}
           />
         )}
         <Button>로그인</Button>
@@ -97,10 +97,23 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
 
       <Footer>
         {stateType === "login" ? (
-          <button onClick={changeMode} > 회원가입 </button>
+          <button
+            onClick={(e) => {
+              setStateType("register");
+            }}
+          >
+            {" "}
+            회원가입{" "}
+          </button>
         ) : (
-          // <Link to="/register">회원가입</Link>
-          <Link to="/login">로그인</Link>
+          <button
+            onClick={(e) => {
+              setStateType("login");
+            }}
+          >
+            {" "}
+            로그인{" "}
+          </button>
         )}
       </Footer>
     </AuthFormBlock>

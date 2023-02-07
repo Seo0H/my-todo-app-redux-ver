@@ -2,6 +2,7 @@ import "./App.css";
 import { Route, Routes, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import TodoPage from "./pages/TodoPage";
+import TestPage from './test/Test';
 
 function App() {
   //JWT 확인 로직 만들기
@@ -18,6 +19,7 @@ function App() {
 
       <Route path="/signup" element={<AuthPage />} />
       <Route path="/todo" element={<TodoPage />} />
+      <Route path="/test" element={<TestPage />} />
     </Routes>
   );
 }
