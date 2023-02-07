@@ -1,26 +1,26 @@
 import AuthForm from "../../components/auth/AuthForm";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeField } from './../../modules/auth';
+import { actionValid, changeField } from "../../modules/auth";
 import { signUpApi } from "../../lib/api/auth";
+import { signInApi } from './../../lib/api/auth';
 
-const SignupForm = () => {
+const SigninForm = () => {
   const dispatch = useDispatch();
 
   const { form, auth, authError } = useSelector(({ authReducer }) => ({
     form: authReducer.singIn,
     auth: authReducer.auth,
-    authError: authReducer,
+    authError: authReducer.authError,
   }));
 
-  //처음부터 메시지 안보이게 - 겹치는 로직...
+  //처음부터 메시지 15
   const [valid, setValid] = useState(true);
   const [message, setMessage] = useState("");
 
   const emailFn = new RegExp("@");
   const passwordFn = new RegExp("(?=(w|d){8,})"); // 공백 제외 8자 이상
 
-  // inpute onChnage handler
   const onBlur = (e) => {
     const { value, name } = e.target;
 
@@ -52,26 +52,30 @@ const SignupForm = () => {
         value,
       })
     );
-    console.log(message);
   };
 
   // for Submit handler
   const onSubmit = (e) => {
     e.preventDefault();
     const { email, password } = form;
-    signUpApi(email, password)
-      .then(() => {
-        e.target.reset();
-        alert("회원가입 성공");
+    console.log(email, password);
+
+    signInApi(email, password)
+      .then((res) => {
+        localStorage.setItem("access_token", res.data.access_token);
+        alert("로그인 성공");
       })
-      .catch((e) => {
-        alert(e.response?.data?.message);
+      .catch((err) => {
+        alert(err);
+      })
+      .finally(()=>{
+        console.log('요청 완');
       });
   };
 
   return (
     <AuthForm
-      type="signup"
+      type="signin"
       form={form}
       onBlur={onBlur}
       onSubmit={onSubmit}
@@ -83,4 +87,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default SigninForm;

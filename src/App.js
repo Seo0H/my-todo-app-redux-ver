@@ -1,9 +1,14 @@
 import "./App.css";
 import { Route, Routes, Navigate } from "react-router-dom";
-import AuthPage from "./pages/AuthPage";
 import TodoPage from "./pages/TodoPage";
 import TestPage from './test/Test';
+import SigninPage from "./pages/SigninPage";
+import SignupPage from "./pages/SignupPage";
 
+/**
+ * @param Signin = '로그인'
+ * @param Signup = '회원가입'
+ */
 function App() {
   //JWT 확인 로직 만들기
   //JWT 인증 X -> /signup
@@ -14,10 +19,11 @@ function App() {
     <Routes>
       <Route
         path="/"
-        element={JWT ? <Navigate to="/todo" /> : <Navigate to="/signup" />}
+        element={JWT ? <Navigate to="/todo" /> : <Navigate to="/signin" />}
       />
 
-      <Route path="/signup" element={<AuthPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/signin" element={<SigninPage />} />
       <Route path="/todo" element={<TodoPage />} />
       <Route path="/test" element={<TestPage />} />
     </Routes>

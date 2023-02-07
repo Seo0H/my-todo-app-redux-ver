@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import CounterContainer from './containers/CounterContainer';
 
 // event hendler
 
@@ -29,6 +30,8 @@ const TestPage = () => {
     name: "이름없음",
   };
 
+
+
   return (
     <>
       <h1>테스트 페이지 입니다.</h1>
@@ -36,6 +39,8 @@ const TestPage = () => {
       <br />
       {type && <div> 버튼을 누르셨군요? </div>}
       <button onClick={onClick}>버튼</button>
+      <hr />
+      <CounterContainer />
     </>
   );
 };
