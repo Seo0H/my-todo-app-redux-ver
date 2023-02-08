@@ -1,11 +1,11 @@
-import AuthTemplate from "../components/auth/AuthTemplate";
+import BasicTemplate from "../components/common/BasicTemplate";
 import SigninForm from "../containers/auth/SigninForm";
 
 const SignupPage = () => {
   return (
-    <AuthTemplate>
+    <BasicTemplate whatIsType={"Sign-in"}>
       <SigninForm />
-    </AuthTemplate>
+    </BasicTemplate>
   );
 };
 

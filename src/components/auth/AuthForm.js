@@ -2,13 +2,15 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../../lib/styles/palette";
 import Button from "../../components/common/Button";
-import { useState } from "react";
 
 const AuthFormBlock = styled.div`
   h3 {
     margin: 0;
     color: ${palette.gray[8]};
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+    font-weight: 900;
+    font-size: 28px;
   }
 `;
 
@@ -77,7 +79,7 @@ const AuthForm = ({
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} method="post">
         <StyledInput
           data-testid="email-input"
           autoComplete="email"

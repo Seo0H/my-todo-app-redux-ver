@@ -1,11 +1,8 @@
 import { createAction, handleActions } from "redux-actions";
 import produce from "immer";
-import * as authAPI from "../lib/api/auth";
 import createRequestActionTypes from "./../lib/createActionType";
-import ChekcValid from "../lib/util/checkValid";
-import { useEffect } from 'react';
 
-/* action type 선언 */
+/* auth action type */
 const CHANGE_FIELD = "auth/CHANGE_FIELD";
 const INITIALIZE_FORM = "auth/INITIALIZE_FORM";
 const VAILD = "auth/VAILD";
@@ -55,6 +52,7 @@ const initialState = {
   },
 };
 
+/* auth reducer */
 const authReducer = handleActions(
   {
     [CHANGE_FIELD]: (state, { payload: { form, key, value } }) =>
@@ -66,7 +64,7 @@ const authReducer = handleActions(
       [form]: initialState[form],
       authError: null, // 폼 전환 시 회원 인증 에러 초기화
     }),
-    [VAILD]: (state, { payload: { form, key, valid } }) => (null),
+    [VAILD]: (state, { payload: { form, key, valid } }) => null,
   },
   initialState
 );
