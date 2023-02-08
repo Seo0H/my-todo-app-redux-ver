@@ -10,10 +10,10 @@ import { Provider } from "react-redux";
 
 import authReducer from "./modules/auth";
 import counterReducer from "./test/modules/counter";
-import loadingReducer from './modules/loading';
+import todoReducer from "./modules/todo";
 
 const store = configureStore({
-  reducer: { authReducer, counterReducer, loadingReducer },
+  reducer: { authReducer, counterReducer, todoReducer},
   devTools: composeWithDevTools(),
 });
 console.log(store.getState());

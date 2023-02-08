@@ -7,10 +7,8 @@ import { signUpApi } from "../../lib/api/auth";
 const SignupForm = () => {
   const dispatch = useDispatch();
 
-  const { form, auth, authError } = useSelector(({ authReducer }) => ({
+  const { form, } = useSelector(({ authReducer }) => ({
     form: authReducer.singIn,
-    auth: authReducer.auth,
-    authError: authReducer,
   }));
 
   //처음부터 메시지 안보이게 - 겹치는 로직...
@@ -52,7 +50,7 @@ const SignupForm = () => {
         value,
       })
     );
-    console.log(message);
+
   };
 
   // for Submit handler

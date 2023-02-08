@@ -3,7 +3,7 @@ import client from "./client";
 export const signInApi = async (email, password) => {
   try {
     await client.post("/auth/signin", { email, password });
-  } catch(err) {
+  } catch (err) {
     alert(err.response.data.message);
   }
 };
