@@ -42,6 +42,16 @@ const Footer = styled.div`
 
 const StyledButton = styled(Button)`
   margin-top: 1rem;
+  :disabled {
+    background: #ccc;
+  }
+`;
+const WarnMessage = styled.span`
+  display: inline-block;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: red;
 `;
 
 const textMap = {
@@ -52,20 +62,31 @@ const textMap = {
 // type : signup, signup 구분
 // form: user name, password, passwordConfirm
 // onChange
-const AuthForm = ({ type, form, onBlur, onSubmit, valid }) => {
+const AuthForm = ({
+  type,
+  form,
+  onChange,
+  onSubmit,
+  isValid,
+  emailMessage,
+  pwMessage,
+  pwCheckMessage,
+}) => {
   const text = textMap[type];
+
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
-      <form onSubmit={onSubmit} >
+      <form onSubmit={onSubmit}>
         <StyledInput
           data-testid="email-input"
           autoComplete="email"
           name="email"
           placeholder="이메일"
-          onBlur={onBlur}
+          onChange={onChange}
           defaltvalue={form.email}
         />
+        <WarnMessage> {emailMessage} </WarnMessage>
         <StyledInput
           data-testid="password-input"
           autoComplete="password"
@@ -73,25 +94,41 @@ const AuthForm = ({ type, form, onBlur, onSubmit, valid }) => {
           type="password"
           placeholder="비밀번호"
           defaltvalue={form.password}
-          onBlur={onBlur}
+          onChange={onChange}
         />
+        <WarnMessage> {pwMessage} </WarnMessage>
         {type === "signup" && (
-          <StyledInput
-            autoComplete="new-password"
-            name="passwordConfirm"
-            placeholder="비밀번호 확인"
-            type="password"
-            onBlur={onBlur}
-            defaltvalue={form.passwordConfirm}
-          />
+          <>
+            <StyledInput
+              autoComplete="new-password"
+              name="passwordConfirm"
+              placeholder="비밀번호 확인"
+              type="password"
+              onChange={onChange}
+              defaltvalue={form.passwordConfirm}
+            />
+            <WarnMessage> {pwCheckMessage} </WarnMessage>
+          </>
         )}
+
         {/* 나중에 이부분 js로 수정해도 될듯... */}
+
         {type === "signup" ? (
-          <StyledButton onSubmit={onSubmit} fullWidth data-testid="signup-button" disabled={!valid}>
+          <StyledButton
+            onSubmit={onSubmit}
+            fullWidth
+            data-testid="signup-button"
+            {...(isValid ? {} : { disabled: true })}
+          >
             회원가입
           </StyledButton>
         ) : (
-          <StyledButton onSubmit={onSubmit} fullWidth data-testid="signin-button" disabled={!valid}>
+          <StyledButton
+            onSubmit={onSubmit}
+            fullWidth
+            data-testid="signin-button"
+            {...(isValid ? { disabled: false } : { disabled: true })}
+          >
             로그인
           </StyledButton>
         )}
