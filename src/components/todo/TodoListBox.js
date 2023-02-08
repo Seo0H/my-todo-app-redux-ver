@@ -43,14 +43,19 @@ const StyledButton = styled(Button)`
   }
 `;
 
-function TodoListBox({ form: { id, todo, isCompleted }, onChange, onSubmit }) {
+function TodoListBox({
+  form: { id, todo, isCompleted },
+  onChange,
+  onSubmit,
+  onClick,
+}) {
   const [modifyMode, setModifyMode] = useState(false);
   const todoInput = useRef();
 
   return (
     <TodoBoxBlock>
       <form>
-        <TodoListBlock id={id}>
+        <TodoListBlock name={id}>
           <input
             type="checkbox"
             name="checkbox"
@@ -67,13 +72,7 @@ function TodoListBox({ form: { id, todo, isCompleted }, onChange, onSubmit }) {
           />
           {modifyMode ? (
             <>
-              <StyledButton
-                name="submit"
-                onSubmit={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
+              <StyledButton name="submit" onClick={onClick(todoInput)}>
                 ✅확인
               </StyledButton>
               <StyledButton

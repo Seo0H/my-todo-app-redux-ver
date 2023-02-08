@@ -40,34 +40,45 @@ function TodoList() {
     // console.log(name, value);
 
     if (name === "todo") {
-      dispatch(
-        changeModifyInput({
-          key: name,
-          value: value,
-        })
-      );
+      // dispatch(
+      //   changeModifyInput({
+      //     key: name,
+      //     value: value,
+      //   })
+      // );
     }
   };
 
-  const modifyTodoSubmit = (e) =>{
-    e.stopPropagation();
+  const onClick = (e, { todoInput }) => {
     e.preventDefault();
     const { id, todo } = form;
-    console.log(e.target);
-  }
+    console.log("id: ", id, "todo: ", todo);
+    console.log(todoInput);
+
+    dispatch(
+      changeModifyInput({
+        key: "todo",
+        value: todo,
+      })
+    );
+  };
 
   const onSubmit = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
     const { id, todo } = form;
     console.log(e.target);
+    console.log("id: ", id, "todo: ", todo);
   };
 
   return (
     <TodoListBlock>
       <h3>TO-DO List</h3>
       <TodoCreateBox />
-      <TodoListBox form={form} onChange={onChange} onSubmit={onSubmit} />
+      <TodoListBox
+        form={form}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        onClick={onClick}
+      />
     </TodoListBlock>
   );
 }
