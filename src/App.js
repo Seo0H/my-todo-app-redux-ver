@@ -1,7 +1,6 @@
 import "./App.css";
 import { Route, Routes, Navigate } from "react-router-dom";
 import TodoPage from "./pages/TodoPage";
-import TestPage from './test/Test';
 import SigninPage from "./pages/SigninPage";
 import SignupPage from "./pages/SignupPage";
 
@@ -25,7 +24,6 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/signin" element={<SigninPage />} />
       <Route path="/todo" element={<TodoPage />} />
-      <Route path="/test" element={<TestPage />} />
     </Routes>
   );
 }
