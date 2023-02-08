@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import palette from "../../lib/styles/palette";
 import TodoListBox from "./TodoListBox";
 
+//이거안씀
 const TodoCreateBoxBlock = styled.div`
   width: 100%;
   margin-bottom: 1rem;
@@ -44,13 +45,30 @@ const TodoForm = styled.form`
  * @param {function} onClick
  * @returns
  */
-function TodoCreateBox(onChange, onClick) {
+function TodoCreateBox({ onCreate }) {
+  const [value, setValue] = useState("");
+
+  const onChange = useCallback((e) => {
+   setValue(e.target.value);
+  }, []);
+
+  const onSubmit = useCallback(
+    (e) => {
+      onCreate(value);
+      setValue("");
+      e.preventDefault();
+    },
+    [onCreate, value]
+  );
+
   return (
     <TodoCreateBoxBlock>
-      <TodoForm id="todoForm">
+      <TodoForm id="todoForm" onClick={onSubmit}>
         <input
           name="todo"
           placeholder="할 일을 입력하세요"
+          value={value}
+          onChange={onChange}
         />
         <button type="submit">ADD</button>
       </TodoForm>

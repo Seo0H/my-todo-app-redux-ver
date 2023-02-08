@@ -9,11 +9,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
 import authReducer from "./modules/auth";
-import counterReducer from "./test/modules/counter";
 import todoReducer from "./modules/todo";
 
 const store = configureStore({
-  reducer: { authReducer, counterReducer, todoReducer},
+  reducer: { authReducer, todoReducer},
   devTools: composeWithDevTools(),
 });
 console.log(store.getState());

@@ -1,12 +1,13 @@
 import BasicTemplate from "../components/common/BasicTemplate";
 import TodoHeader from "../components/todo/TodoHeader";
-import TodoList from "../containers/todo/TodoList";
+import TodoListContainer from "../containers/todo/TodoListContainer";
+import TodoCreateBox from "./../components/todo/TodoCreateBox";
 
 const TodoPage = () => {
   return (
     <BasicTemplate whatIsType="TO-DO">
       <TodoHeader />
-      <TodoList />
+      <TodoListContainer />
     </BasicTemplate>
   );
 };
