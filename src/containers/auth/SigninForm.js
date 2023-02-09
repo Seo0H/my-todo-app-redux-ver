@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeField } from "../../modules/auth";
 import { signInApi } from "./../../lib/api/auth";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const SigninForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { form } = useSelector(({ authReducer }) => ({
     form: authReducer.singIn,
@@ -65,10 +67,22 @@ const SigninForm = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const { email, password } = form;
-    signInApi(email, password);
+    signInApi(email, password).then((res) => {
+      localStorage.setItem("access_token", res.data.access_token);
+      localStorage.setItem("User_id", email);
+      alert("로그인 성공");
+      navigate("/todo");
+    }).catch(err=>{
+      alert(err.response.data.message);
+    });
+  };
+
+  const testAPI =(e)=>{
+
   };
 
   return (
+    <>
     <AuthForm
       type="signin"
       form={form}
@@ -80,6 +94,7 @@ const SigninForm = () => {
       emailMessage={emailMessage}
       pwMessage={pwMessage}
     />
+    </>
   );
 };
 

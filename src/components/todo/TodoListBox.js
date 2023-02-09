@@ -85,20 +85,25 @@ function TodoListBox({
   onModify,
   onRemove,
 }) {
-  const [modifyMode, setModifyMode] = useState(false);
-  const [modifyVal, setModifyVal] = useState(todo);
 
+  /**
+   * modifyMode : 수정 모드를 관리하는 변수
+   * modifyVal: 수정된 text를 담는 변수
+   * todoInput: todoInput을 가리키는 참조 ref 수정 모드의 오토포커스를 관리하기 위해 사용.
+   */
+  const [modifyMode, setModifyMode] = useState(false);
+  // const [modifyVal, setModifyVal] = useState(todo);
   const todoInput = useRef();
 
-  const onChange = useCallback((e) => {
-    setModifyVal(e.target.value);
-  }, []);
+  // const onChange = useCallback((e) => {
+  //   // setModifyVal(e.target.value);
+  // }, []);
 
-  let modifyCount = false;
   const onCancel = (e) => {
-    setModifyMode((props)=> !props);
+    setModifyMode(false);
+    todoInput.current.value = todo;
     todoInput.current.disabled = true;
-    setModifyVal({...todo,});
+    e.preventDefault(); // 이걸안해서 onClick bubbling 생김. 공부가 더 필요할듯
   };
 
   const ModifyBtn = () => {
@@ -106,9 +111,8 @@ function TodoListBox({
       <>
         <StyledButton
           onClick={(e) => {
-            onModify(id, modifyVal);
+            onModify(id, todoInput.current.value);
             setModifyMode(false);
-            modifyCount = true;
             e.preventDefault();
           }}
         >
@@ -149,14 +153,18 @@ function TodoListBox({
           type="checkbox"
           name="checkbox"
           value={id}
-          onClick={(e) => onFinish( parseInt(e.target.value) )}
+          onClick={(e) => {
+            console.log(e.cancelable);
+            onFinish(parseInt(e.target.value));
+          }}
           iscompleted={isCompleted.toString()}
         />
         <input
           type="text"
           name="todo"
-          defaultValue={modifyVal}
-          onChange={onChange}
+          autoComplete="off"
+          defaultValue={todo}
+          // onChange={onChange}
           ref={todoInput}
           disabled
         />

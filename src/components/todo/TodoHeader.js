@@ -1,11 +1,22 @@
-/**
- * 로그인 로그아웃 관리 컴포넌트
- * @returns
- */
+import { useNavigate } from "react-router-dom";
+
 function TodoHeader() {
-    return(
-        <div>TodoHeader</div>
-    )
+  const navigate = useNavigate();
+  const onLogount = (e) => {
+
+    // { //이후 모달창 구현
+    //   confirm("로그아웃 하시겠습니까?")
+    //   && localStorage.clear();
+    //     navigate("/signup");
+    // }
+
+    localStorage.clear();
+    alert("로그아웃되엇슴다");
+    navigate("/signin");
+    e.preventDefault();
+  };
+
+  return <button onClick={onLogount} > 로그아웃 </button>;
 }
 
 export default TodoHeader;
