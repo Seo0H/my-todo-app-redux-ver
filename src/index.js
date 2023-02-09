@@ -10,12 +10,12 @@ import { Provider } from "react-redux";
 
 import authReducer from "./modules/auth";
 import todoReducer from "./modules/todo";
+import counterReducer from './test/modules/counter';
 
 const store = configureStore({
-  reducer: { authReducer, todoReducer},
+  reducer: { authReducer, todoReducer, counterReducer},
   devTools: composeWithDevTools(),
 });
-console.log(store.getState());
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

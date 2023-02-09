@@ -72,7 +72,7 @@ const AuthForm = ({
   isValid,
   emailMessage,
   pwMessage,
-  pwCheckMessage,
+  pwConfirmMessage,
 }) => {
   const text = textMap[type];
 
@@ -109,7 +109,7 @@ const AuthForm = ({
               onChange={onChange}
               defaltvalue={form.passwordConfirm}
             />
-            <WarnMessage> {pwCheckMessage} </WarnMessage>
+            <WarnMessage> {pwConfirmMessage} </WarnMessage>
           </>
         )}
 

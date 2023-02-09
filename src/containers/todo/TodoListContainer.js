@@ -4,9 +4,15 @@ import TodoCreateBox from "../../components/todo/TodoCreateBox";
 import TodoListBox from "../../components/todo/TodoListBox";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { todoCreate, todoFinish, todoRemove } from "../../modules/todo";
-import { useCallback, useState } from "react";
-import { todoModify } from './../../modules/todo';
+import {
+  getTodos,
+  todoCreate,
+  todoFinish,
+  todoRemove,
+} from "../../modules/todo";
+import { useCallback, useEffect, useState } from "react";
+import { todoModify } from "./../../modules/todo";
+import { getTodosApi } from "../../lib/api/todo";
 
 const TodoListBlock = styled.div`
   h3 {
@@ -27,21 +33,31 @@ const TodoListBlock = styled.div`
 
 function TodoListContainer() {
   const dispatch = useDispatch();
+  // const [todos, setTodos] = useState([]);
+  // useEffect(() => {
+  //   getTodosApi()
+  //     .then(({ data }) => {
+  //       setTodos(data);
+  //     })
+  //     .catch((err) => console.log(err.response.data.message));
+  // }, []);
+
   const { todos } = useSelector(({ todoReducer }) => ({
     todos: todoReducer,
   }));
-  const [todos2, setTodos] = useState([]);
 
   const onCreate = useCallback(
-    (text) => {
-      if (text === "") return;
-      dispatch(todoCreate(text));
+    (todo) => {
+      if (!todo) return;
+      dispatch(todoCreate(todo));
     },
     [todos]
   );
 
   const onRemove = useCallback(
-    (id) => {dispatch(todoRemove(id));},
+    (id) => {
+      dispatch(todoRemove(id));
+    },
     [todos]
   );
 
@@ -55,10 +71,9 @@ function TodoListContainer() {
   const onFinish = useCallback(
     (id) => {
       dispatch(todoFinish(id));
-      console.log(todos)
     },
     [todos]
-    );
+  );
 
   return (
     <TodoListBlock>
