@@ -33,18 +33,22 @@ const TodoListBlock = styled.div`
 
 function TodoListContainer() {
   const dispatch = useDispatch();
-  // const [todos, setTodos] = useState([]);
-  // useEffect(() => {
-  //   getTodosApi()
-  //     .then(({ data }) => {
-  //       setTodos(data);
-  //     })
-  //     .catch((err) => console.log(err.response.data.message));
-  // }, []);
-
-  const { todos } = useSelector(({ todoReducer }) => ({
-    todos: todoReducer,
+  const {todos, status, test } = useSelector((state) => ({
+    todos: state.todoReducer.todos,
+    status: state.todoReducer.status,
+    test: state,
   }));
+
+
+  // const [todos, setTodos] = useState([]);
+  useEffect(() => {
+    dispatch(getTodos());
+    console.log(status);
+  }, []);
+
+  // const { todos } = useSelector(({ todoReducer }) => ({
+  //   todos: todoReducer,
+  // }));
 
   const onCreate = useCallback(
     (todo) => {
