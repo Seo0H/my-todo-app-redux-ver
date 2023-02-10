@@ -1,31 +1,29 @@
-import { getTodosApi } from "../lib/api/todo";
+import { deleteTodoApi, getTodosApi, updateTodoApi } from "../lib/api/todo";
 import { createTodoApi } from "./../lib/api/todo";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { produce } from "immer";
 
 /* todo action type */
 const GET_TODOS = "todo/GET_TODOS";
 const TODO_CREATE = "todo/TODO_CREATE";
 const TODO_REMOVE = "todo/TODO_REMOVE";
-const TODO_MODIFY = "todo/TODO_MODIFY";
-const TODO_FINISH = "todo/TODO_FINISH";
-const TODO_STATE = "todo/TODO_STATE";
+const TODO_UPDATE = "todo/TODO_UPDATE";
 const CHANGE_MODIFY_INPUT = "todo/CHANGE_MODIFY_INPUT";
-const CREATE_TODO = "todo/CREATE_TODO";
 
-/* todo reducer */
+
+/* todo Thunk Action */
 export const getTodos = createAsyncThunk(GET_TODOS, async () =>
   getTodosApi().then((res) => res.data)
 );
-
-// export const todoCreate = createAction(TODO_CREATE, (text) => text);
-// export const todoRemove = createAction(TODO_REMOVE, (id) => id);
-// export const todoModify = createAction(TODO_MODIFY, (id, modifyVal) => ({
-//   id,
-//   modifyVal,
-// }));
-// export const todoFinish = createAction(TODO_FINISH, (id) => id);
-// export const todoState = createAction(TODO_STATE);
+export const todoRemove = createAsyncThunk(TODO_REMOVE, async (id) =>
+  deleteTodoApi(id)
+);
+export const todoCreate = createAsyncThunk(TODO_CREATE, async (text) =>
+  createTodoApi(text)
+);
+export const todoUpdate = createAsyncThunk(
+  TODO_UPDATE,
+  async ({id, todo, isCompleted}) => updateTodoApi(id, todo, isCompleted)
+);
 
 const initialState = { todos: [], status: "" };
 
@@ -33,22 +31,6 @@ const todoSlice = createSlice({
   name: "todoSlice",
   initialState,
   reducers: {
-    todoCreate: (todos, { payload: todo }) => {
-      createTodoApi(todo)
-        .then((res) => {
-          console.log(res.data);
-          console.log("전송완료");
-        })
-        .catch((err) => {
-          console.log(err.response.data.message);
-        });
-    },
-    todoRemove: (todos, { payload: id }) =>
-      todos.filter((todo) => todo.id !== id),
-    todoModify: (todos, { payload: { id, modifyVal } }) =>
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, todo: modifyVal } : todo
-      ),
     todoFinish: (todos, { payload: id }) => {
       todos.map((todo) => {
         return todo.id == id
@@ -61,20 +43,57 @@ const todoSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getTodos.pending, (state, action) => {
+    /* getTodos Thunk Reducer */
+    builder.addCase(getTodos.pending, (state) => {
       state.status = "LOADING";
     });
     builder.addCase(getTodos.fulfilled, (state, { payload: todos }) => {
-      todos.map((todo) => (state.todos.push(todo)));
+      // todos.map((todo) => (state.todos.push(todo)));
+      state.todos = [...todos];
       state.status = "COMPLETE";
     });
-    builder.addCase(getTodos.rejected, (state, action) => {
+    builder.addCase(getTodos.rejected, (state) => {
+      state.status = "FAIL";
+    });
+
+    /* todoRemove Thunk Reducer */
+    builder.addCase(todoRemove.pending, (state) => {
+      state.status = "LOADING";
+    });
+    builder.addCase(
+      todoRemove.fulfilled,
+      ({ todos, state }, { payload: id }) => {
+        todos.filter((todo) => todo.id !== id);
+        state = "COMPLETE";
+      }
+    );
+    builder.addCase(todoRemove.rejected, (state) => {
+      state.status = "FAIL";
+    });
+
+    /* todoCreate Thunk Reducer */
+    builder.addCase(todoCreate.pending, (state) => {
+      state.status = "LOADING";
+    });
+    builder.addCase(todoCreate.fulfilled, (state) => {
+      state.status = "COMPLETE";
+    });
+    builder.addCase(todoCreate.rejected, (state) => {
+      state.status = "FAIL";
+    });
+
+    /* todoUpdate Thunk Reducer */
+    builder.addCase(todoUpdate.pending, (state, ) => {
+      state.status = "LOADING";
+    });
+    builder.addCase(todoUpdate.fulfilled, (state) => {
+      state.status = "COMPLETE";
+    });
+    builder.addCase(todoUpdate.rejected, (state) => {
       state.status = "FAIL";
     });
   },
 });
 
 export default todoSlice;
-export const { todoCreate, todoRemove, todoModify, todoFinish, todoState } =
-  todoSlice.actions;
-// export { asyncUp, asyncUpFetch };
+export const { todoFinish, todoState } = todoSlice.actions;
