@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import palette from "../../lib/styles/palette";
 import Button from "./../common/Button";
@@ -82,93 +88,91 @@ const StyledButton = styled(Button)`
 function TodoListBox({
   todo: { id, todo, isCompleted },
   onFinish,
-  onModify,
+  onUpdate,
   onRemove,
 }) {
-
   /**
    * modifyMode : 수정 모드를 관리하는 변수
    * modifyVal: 수정된 text를 담는 변수
-   * todoInput: todoInput을 가리키는 참조 ref 수정 모드의 오토포커스를 관리하기 위해 사용.
+   * inputRef: input을 가리키는 참조 ref 수정 모드의 오토포커스를 관리하기 위해 사용.
    */
   const [modifyMode, setModifyMode] = useState(false);
-  // const [modifyVal, setModifyVal] = useState(todo);
-  const todoInput = useRef();
+  const inputRef = useRef();
 
-  // const onChange = useCallback((e) => {
-  //   // setModifyVal(e.target.value);
-  // }, []);
+  useLayoutEffect(() => {
+    if (inputRef.current !== null) inputRef.current.focus();
+  });
 
   const onCancel = (e) => {
     setModifyMode(false);
-    todoInput.current.value = todo;
-    todoInput.current.disabled = true;
+    inputRef.current.value = todo;
+    inputRef.current.disabled = true;
     e.preventDefault(); // 이걸안해서 onClick bubbling 생김. 공부가 더 필요할듯
   };
 
-  const ModifyBtn = () => {
-    return (
-      <>
-        <StyledButton
-          onClick={(e) => {
-            onModify(id, todoInput.current.value);
-            setModifyMode(false);
-            e.preventDefault();
-          }}
-        >
-          ✅확인
-        </StyledButton>
-        <StyledButton name="cancel" onClick={(e) => onCancel(e)}>
-          ❌취소
-        </StyledButton>
-      </>
-    );
-  };
-
-  const DefaltBtn = () => {
-    return (
-      <>
-        <StyledButton
-          onClick={(e) => {
-            setModifyMode(true);
-            todoInput.current.disabled = false;
-            todoInput.current.focus();
-            e.preventDefault();
-          }}
-          name="modify"
-        >
-          ✏️수정
-        </StyledButton>
-        <StyledButton name="delete" onClick={() => onRemove(id)}>
-          ❌삭제
-        </StyledButton>
-      </>
-    );
-  };
+  if (modifyMode) inputRef.current.focus();
 
   return (
     <TodoBoxBlock>
       <TodoListBlock>
         <input
           type="checkbox"
-          name="checkbox"
-          value={id}
-          onClick={(e) => {
-            console.log(e.cancelable);
-            onFinish(parseInt(e.target.value));
+          name="isCompleted"
+          onClick={() => {
+            onUpdate({ id, todo, isCompleted: !isCompleted });
           }}
-          iscompleted={isCompleted.toString()}
+          checked={isCompleted}
+          readOnly
         />
         <input
           type="text"
           name="todo"
           autoComplete="off"
           defaultValue={todo}
-          // onChange={onChange}
-          ref={todoInput}
-          disabled
+          // onChange={(e) => {
+          //   !e.target.disabled ? e.current.focus() : {};
+          // }}
+          ref={inputRef}
+          disabled={modifyMode ? false : true}
         />
-        {modifyMode ? <ModifyBtn /> : <DefaltBtn />}
+
+        {modifyMode ? (
+          <>
+            <StyledButton
+              name="modify-todo"
+              onClick={(e) => {
+                onUpdate({ id, todo: inputRef.current.value, isCompleted });
+                setModifyMode(false);
+                e.preventDefault();
+              }}
+            >
+              ✅확인
+            </StyledButton>
+            <StyledButton name="cancel" onClick={(e) => onCancel(e)}>
+              ↪️ 취소
+            </StyledButton>
+          </>
+        ) : (
+          <>
+            <StyledButton
+              onClick={(e) => {
+                setModifyMode(true);
+                e.preventDefault();
+              }}
+              name="modify"
+            >
+              ✏️수정
+            </StyledButton>
+            <StyledButton
+              name="delete"
+              onClick={(e) => {
+                onRemove(id, e);
+              }}
+            >
+              ❌삭제
+            </StyledButton>
+          </>
+        )}
       </TodoListBlock>
     </TodoBoxBlock>
   );

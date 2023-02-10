@@ -9,6 +9,7 @@ import {
   todoCreate,
   todoFinish,
   todoRemove,
+  todoUpdate,
 } from "../../modules/todo";
 import { useCallback, useEffect, useState } from "react";
 import { todoModify } from "./../../modules/todo";
@@ -33,41 +34,42 @@ const TodoListBlock = styled.div`
 
 function TodoListContainer() {
   const dispatch = useDispatch();
-  const {todos, status, test } = useSelector((state) => ({
+  const { todos, status, test } = useSelector((state) => ({
     todos: state.todoReducer.todos,
     status: state.todoReducer.status,
     test: state,
   }));
 
-
-  // const [todos, setTodos] = useState([]);
+  /* first render */
   useEffect(() => {
     dispatch(getTodos());
-    console.log(status);
   }, []);
 
-  // const { todos } = useSelector(({ todoReducer }) => ({
-  //   todos: todoReducer,
-  // }));
-
   const onCreate = useCallback(
-    (todo) => {
+    async (todo) => {
       if (!todo) return;
-      dispatch(todoCreate(todo));
+      await dispatch(todoCreate(todo));
+      await dispatch(getTodos());
     },
     [todos]
   );
 
   const onRemove = useCallback(
-    (id) => {
-      dispatch(todoRemove(id));
+    async (id, e) => {
+      await dispatch(todoRemove(id));
+      await dispatch(getTodos());
     },
     [todos]
   );
 
-  const onModify = useCallback(
-    (id, value) => {
-      dispatch(todoModify(id, value));
+  const onUpdate = useCallback(
+    async ({ id, todo, isCompleted }) => {
+      // id, todo, isCompleted 넘겨줘야 함.
+      // onUpdate 감지되면 해당 checkbox isChecked , input val 냅다 가져오기
+      // 그러니까...
+      console.log( id, todo, isCompleted);
+      await dispatch(todoUpdate({id, todo, isCompleted}));
+      await dispatch(getTodos());
     },
     [todos]
   );
@@ -89,7 +91,7 @@ function TodoListContainer() {
           todo={todo}
           onFinish={onFinish}
           onRemove={onRemove}
-          onModify={onModify}
+          onUpdate={onUpdate}
         />
       ))}
     </TodoListBlock>
