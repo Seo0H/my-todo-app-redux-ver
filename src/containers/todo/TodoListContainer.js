@@ -7,13 +7,11 @@ import { useDispatch } from "react-redux";
 import {
   getTodos,
   todoCreate,
-  todoFinish,
   todoRemove,
   todoUpdate,
 } from "../../modules/todo";
-import { useCallback, useEffect, useState } from "react";
-import { todoModify } from "./../../modules/todo";
-import { getTodosApi } from "../../lib/api/todo";
+import { useCallback, useEffect } from "react";
+
 
 const TodoListBlock = styled.div`
   h3 {
@@ -27,11 +25,9 @@ const TodoListBlock = styled.div`
 `;
 
 /**
- * @components `TodolistForm` = 리듀서를 불러 정보를 가공하는 공간입니다.
- * `TodoForm`에서 View를 보여주는 필요한 정보를 가공해 인자로 전달합니다.
- * @returns
+ * @components `TodolistForm` : `todoReducer` 리덕스를 통해 정보를 받아오는 공간입니다.
+ * `TodoForm`에서 필요한 정보를 disptch로 받아와 해당 컴포넌트에 props로 전달합니다.
  */
-
 function TodoListContainer() {
   const dispatch = useDispatch();
   const { todos, status, test } = useSelector((state) => ({
@@ -45,6 +41,7 @@ function TodoListContainer() {
     dispatch(getTodos());
   }, []);
 
+  /* todo create handler */
   const onCreate = useCallback(
     async (todo) => {
       if (!todo) return;
@@ -54,6 +51,7 @@ function TodoListContainer() {
     [todos]
   );
 
+  /* todo remove handler */
   const onRemove = useCallback(
     async (id, e) => {
       await dispatch(todoRemove(id));
@@ -62,21 +60,11 @@ function TodoListContainer() {
     [todos]
   );
 
+  /* todo update( checkbox, modify ) handler */
   const onUpdate = useCallback(
     async ({ id, todo, isCompleted }) => {
-      // id, todo, isCompleted 넘겨줘야 함.
-      // onUpdate 감지되면 해당 checkbox isChecked , input val 냅다 가져오기
-      // 그러니까...
-      console.log( id, todo, isCompleted);
-      await dispatch(todoUpdate({id, todo, isCompleted}));
+      await dispatch(todoUpdate({ id, todo, isCompleted }));
       await dispatch(getTodos());
-    },
-    [todos]
-  );
-
-  const onFinish = useCallback(
-    (id) => {
-      dispatch(todoFinish(id));
     },
     [todos]
   );
@@ -89,7 +77,6 @@ function TodoListContainer() {
         <TodoListBox
           key={todo.id}
           todo={todo}
-          onFinish={onFinish}
           onRemove={onRemove}
           onUpdate={onUpdate}
         />

@@ -7,13 +7,11 @@ import { BrowserRouter } from "react-router-dom";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-
 import authReducer from "./modules/auth";
 import todoSlice from "./modules/todo";
-import counterReducer from "./test/modules/counter";
 
 const store = configureStore({
-  reducer: { authReducer, todoReducer: todoSlice.reducer, counterReducer },
+  reducer: { authReducer, todoReducer: todoSlice.reducer },
   devTools: composeWithDevTools(),
 });
 

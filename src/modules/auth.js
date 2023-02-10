@@ -1,22 +1,15 @@
 import { createAction, handleActions } from "redux-actions";
 import produce from "immer";
-import createRequestActionTypes from "./../lib/createActionType";
 
-/* auth action type */
+/* Auth action type */
 const CHANGE_FIELD = "auth/CHANGE_FIELD";
 const INITIALIZE_FORM = "auth/INITIALIZE_FORM";
 const VAILD = "auth/VAILD";
 
-const [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE] =
-  createRequestActionTypes("auth/REGISTER");
-
-const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] =
-  createRequestActionTypes("auth/LOGIN");
-
 /**
- * @param {Object} form = { signUp, singIn };
- * @param {Object} key = { email, password, passwordConfirm };
- * @param {String} value = '' // 유저가 바꾸려는 값
+ * @param {Object} form { signUp, singIn };
+ * @param {Object} key { email, password, passwordConfirm };
+ * @param {String} value user-input
  */
 export const changeField = createAction(
   CHANGE_FIELD,
@@ -62,7 +55,7 @@ const authReducer = handleActions(
     [INITIALIZE_FORM]: (state, { payload: { payload: form } }) => ({
       ...state,
       [form]: initialState[form],
-      authError: null, // 폼 전환 시 회원 인증 에러 초기화
+      authError: null,
     }),
     [VAILD]: (state, { payload: { form, key, valid } }) => null,
   },

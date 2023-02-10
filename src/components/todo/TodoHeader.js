@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
+/**
+ * @component `TodoHeader` : 로그아웃 버튼을 포함합니다.
+ */
 function TodoHeader() {
   const navigate = useNavigate();
   const onLogount = (e) => {

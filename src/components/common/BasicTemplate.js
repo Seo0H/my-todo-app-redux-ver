@@ -2,10 +2,6 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import palette from "../../lib/styles/palette";
 
-/**
- * 회원가입 / 로그인 페이지의 레이아웃 담당 컴포넌트
- */
-
 /* 화면 중앙 전체 채우기 */
 const BasicTemplateBlock = styled.div`
   position: absolute;
@@ -41,16 +37,12 @@ const WhiteBox = styled.div`
 `;
 
 /**
- * @param {String} whatIsType : 로그인 페이지인지, 회원가입 페이지인지, TO-DO 페이지인지를 알려줍니다.
- * @returns
+ * 기본 레이아웃 컴포넌트입니다.
  */
-function BasicTemplate({ children, whatIsType }) {
+function BasicTemplate({ children }) {
   return (
     <BasicTemplateBlock>
-      <WhiteBox className="wite-box" whatIsType={whatIsType}>
-        {/* <div className="logo-area">
-                    <Link to="/">{whatIsType}</Link>
-                </div>*/}
+      <WhiteBox className="wite-box">
         {children}
       </WhiteBox>
     </BasicTemplateBlock>

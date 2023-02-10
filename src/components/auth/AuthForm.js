@@ -1,72 +1,22 @@
-import styled from "styled-components";
 import { Link } from "react-router-dom";
-import palette from "../../lib/styles/palette";
-import Button from "../../components/common/Button";
+import { AuthFormBlock, Footer, StyledButton, StyledInput, WarnMessage } from "./style";
 
-const AuthFormBlock = styled.div`
-  h3 {
-    margin: 0;
-    color: ${palette.gray[8]};
-    margin-bottom: 2rem;
-    margin-top: 1rem;
-    font-weight: 900;
-    font-size: 28px;
-  }
-`;
-
-const StyledInput = styled.input`
-  font-size: 1rem;
-  border: none;
-  border-bottom: 1px solid ${palette.gray[5]};
-  padding-bottom: 0.5rem;
-  outline: none;
-  width: 100%;
-  &:focus {
-    color: $oc-teal-7;
-    border-bottom: 1px solid ${palette.gray[7]};
-  }
-  & + & {
-    margin-top: 1rem;
-  }
-`;
-
-const Footer = styled.div`
-  margin-top: 2rem;
-  text-align: right;
-  a {
-    color: ${palette.gray[6]};
-    text-decoration: underline;
-    &:hover {
-      color: ${palette.gray[9]};
-    }
-  }
-`;
-
-const StyledButton = styled(Button)`
-  margin-top: 1rem;
-  :disabled {
-    background: #ccc;
-  }
-`;
-const WarnMessage = styled.span`
-  display: inline-block;
-  margin-top: 0.25rem;
-  margin-bottom: 1rem;
-  font-size: 0.8rem;
-  color: red;
-`;
 
 const textMap = {
   signup: "회원가입",
   signin: "로그인",
 };
 
-// type : signup, signup 구분
-// form: user name, password, passwordConfirm
-// onChange
+
+/**
+ * @param {string} type : signup, signup 을 알려주는 매개 변수
+ * @param {Object} form : email, password, passwordConfirm 의 값을 담고있는 매개 변수
+ */
 const AuthForm = ({
+
   type,
   form,
+
   onChange,
   onSubmit,
   isValid,

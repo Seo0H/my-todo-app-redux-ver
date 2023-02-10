@@ -7,8 +7,6 @@ const GET_TODOS = "todo/GET_TODOS";
 const TODO_CREATE = "todo/TODO_CREATE";
 const TODO_REMOVE = "todo/TODO_REMOVE";
 const TODO_UPDATE = "todo/TODO_UPDATE";
-const CHANGE_MODIFY_INPUT = "todo/CHANGE_MODIFY_INPUT";
-
 
 /* todo Thunk Action */
 export const getTodos = createAsyncThunk(GET_TODOS, async () =>
@@ -48,7 +46,6 @@ const todoSlice = createSlice({
       state.status = "LOADING";
     });
     builder.addCase(getTodos.fulfilled, (state, { payload: todos }) => {
-      // todos.map((todo) => (state.todos.push(todo)));
       state.todos = [...todos];
       state.status = "COMPLETE";
     });

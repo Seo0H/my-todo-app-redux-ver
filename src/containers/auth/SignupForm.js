@@ -5,6 +5,10 @@ import { changeField } from "./../../modules/auth";
 import { signUpApi } from "../../lib/api/auth";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * @components `SignupForm` : `authReducer` 리덕스를 통해 정보를 받아오는 공간입니다.
+ * `회원가입`에 필요한 정보를 disptch로 받아와 `AuthForm`에 props로 전달합니다.
+ */
 const SignupForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,15 +33,17 @@ const SignupForm = () => {
   const [isValid, setIsValid] = useState(false);
   let passwordTmp = "";
 
-  /**
-   * @param {String} name : tag의 name을 의미합니다. email, password
-   * @param {String} value : 사용자 input을 의미합니다.
-   */
+  // 회원가입 버튼 활성화 handler
   useEffect(() => {
     if (emailIsValid && pwisValid && pwisConfirmValid) setIsValid(true);
   }, [emailIsValid, pwisValid, pwisConfirmValid]);
 
+  // onChange handler
   const onChange = (e) => {
+    /**
+     * @param {String} name : tag의 name을 의미합니다. email, password
+     * @param {String} value : 사용자 input을 의미합니다.
+     */
     const { name, value } = e.target;
 
     if (name === "email") {
@@ -84,12 +90,14 @@ const SignupForm = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const { email, password } = form;
-    signUpApi(email, password).then(() => {
-      alert("회원가입 성공");
-      navigate("/signin");
-    }).catch(err=>{
-      alert(err.response.data.message);
-    });
+    signUpApi(email, password)
+      .then(() => {
+        alert("회원가입 성공");
+        navigate("/signin");
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   };
 
   return (
@@ -98,6 +106,7 @@ const SignupForm = () => {
       form={form}
       onChange={onChange}
       onSubmit={onSubmit}
+
       //유효성 검사 관련 props
       isValid={isValid}
       emailMessage={emailMessage}

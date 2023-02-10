@@ -1,5 +1,6 @@
 import axios from "axios";
 
+/* Axios 설정 */
 const client = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   headers: {
@@ -13,10 +14,5 @@ client.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
-
-client.interceptors.response.use(function (response) {
-  return response;
-});
-
 
 export default client;
