@@ -3,7 +3,7 @@ import SignupForm from './../containers/auth/SignupForm';
 
 const SigninPage = () => {
   return (
-    <BasicTemplate  whatIsType={"Sign-up"}>
+    <BasicTemplate>
       <SignupForm />
     </BasicTemplate>
   );

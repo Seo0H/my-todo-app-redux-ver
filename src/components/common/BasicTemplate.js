@@ -38,11 +38,12 @@ const WhiteBox = styled.div`
 
 /**
  * 기본 레이아웃 컴포넌트입니다.
+ * @props `whatIsType` : todo의 박스 크기를 조절합니다.
  */
-function BasicTemplate({ children }) {
+function BasicTemplate({ children, whatIsType }) {
   return (
     <BasicTemplateBlock>
-      <WhiteBox className="wite-box">
+      <WhiteBox className="wite-box" whatIsType={whatIsType}>
         {children}
       </WhiteBox>
     </BasicTemplateBlock>

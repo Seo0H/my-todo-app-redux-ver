@@ -12,8 +12,8 @@ const TodoPage = () => {
   }
 
   return (
-    <BasicTemplate whatIsType="TO-DO">
-      <TodoHeader />
+    <BasicTemplate whatIsType={"TO-DO"}>
+      <TodoHeader/>
       <TodoListContainer />
     </BasicTemplate>
   );
