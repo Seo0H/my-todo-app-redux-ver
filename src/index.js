@@ -9,14 +9,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
 import authReducer from "./modules/auth";
-import todoReducer from "./modules/todo";
-import counterReducer from './test/modules/counter';
+import todoSlice from "./modules/todo";
+import counterReducer from "./test/modules/counter";
 
 const store = configureStore({
-  reducer: { authReducer, todoReducer, counterReducer},
+  reducer: { authReducer, todoReducer: todoSlice.reducer, counterReducer },
   devTools: composeWithDevTools(),
 });
-
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
