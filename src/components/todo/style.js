@@ -22,7 +22,7 @@ export const TodoForm = styled.form`
   }
   button {
     background: ${palette.gray[2]};
-    font-weight: 500;
+    font-weight: 700;
     &:hover {
       background: ${palette.gray[3]};
       color: ${palette.gray[9]};
@@ -71,9 +71,19 @@ export const StyledButton = styled(Button)`
   margin-left: 0.25rem;
   height: 2rem;
   background: ${palette.gray[2]};
-  font-weight: 500;
+  font-size: .9rem;
+  font-weight: 700;
   color: ${palette.gray[8]};
   &:hover {
     background: ${palette.gray[3]};
+  }
+`;
+
+export const StyledA = styled.a`
+  color: ${palette.gray[6]};
+  text-decoration: underline;
+  cursor: pointer;
+  hover {
+    color: ${palette.gray[9]};
   }
 `;

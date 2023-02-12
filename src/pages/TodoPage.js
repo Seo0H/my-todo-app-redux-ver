@@ -1,8 +1,6 @@
-import BasicTemplate from "../components/common/BasicTemplate";
-import TodoHeader from "../components/todo/TodoHeader";
+import BasicTemplate from "../components/common/BasicTemplate"
 import TodoListContainer from "../containers/todo/TodoListContainer";
-import TodoCreateBox from "./../components/todo/TodoCreateBox";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const TodoPage = () => {
   const JWT = localStorage.getItem("access_token") ? true : false;
