@@ -9,7 +9,7 @@ function TodoCreateBox({ onCreate }) {
   const [value, setValue] = useState("");
 
   const onChange = useCallback((e) => {
-   setValue(e.target.value);
+    setValue(e.target.value);
   }, []);
 
   const onSubmit = useCallback(
@@ -25,12 +25,13 @@ function TodoCreateBox({ onCreate }) {
     <TodoCreateBoxBlock>
       <TodoForm id="todoForm" onClick={onSubmit}>
         <input
+          data-testid="new-todo-input"
           name="todo"
           placeholder="할 일을 입력하세요"
           value={value}
           onChange={onChange}
         />
-        <button type="submit">ADD</button>
+        <button data-testid="new-todo-add-button" type="submit">ADD</button>
       </TodoForm>
     </TodoCreateBoxBlock>
   );
