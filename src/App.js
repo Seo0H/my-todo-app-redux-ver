@@ -4,18 +4,17 @@ import SigninPage from "./pages/SigninPage";
 import SignupPage from "./pages/SignupPage";
 
 function App() {
-  const JWT = localStorage.getItem("access_token") ? true : false;
+  const hasJWT = localStorage.getItem("access_token") ? true : false;
 
   return (
     <Routes>
       <Route
         path="/"
-        element={JWT ? <Navigate to="/todo" /> : <Navigate to="/signin" />}
+        element={hasJWT ? <Navigate to="/todo" /> : <Navigate to="/signin" />}
       />
-
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/signin" element={<SigninPage />} />
-      <Route path="/todo" element={<TodoPage />} />
+      <Route path="/todo" element={hasJWT ? <TodoPage /> : <Navigate to="/signin" />} />
     </Routes>
   );
 }
