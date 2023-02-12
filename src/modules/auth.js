@@ -15,9 +15,6 @@ const POST_SIGNUP = "auth/POST_SIGNUP"; // 회원가입
 const SIGNUP_SUCCESS = "auth/SIGNUP_SUCCESS"; // 회원가입 성공
 const SIGNUP_ERROR = "auth/SIGNUP_ERROR"; // 회원가입 실패
 
-const signInSuccess = createAction(SIGNIN_SUCCESS, (payload) => payload);
-const signInError = createAction(SIGNIN_ERROR, (payload) => payload);
-
 /* authApi Thunk Action */
 // 회원가입
 export const postSignUp = createAsyncThunk(
@@ -25,8 +22,8 @@ export const postSignUp = createAsyncThunk(
   async ({ email, password }) => {
     try {
       await signUpApi(email, password);
-    } catch (err) {
-      alert(err.response.data.message);
+    } catch ({ response }) {
+      throw response.data;
     }
   }
 );
@@ -66,8 +63,8 @@ const authSlice = createSlice({
         draft[form][key] = value;
       }),
     changeSignInStatus: (state) => {
-      state.status = "signin"
-    }
+      state.status = "signin";
+    },
   },
   extraReducers: (builder) => {
     /* postSignUp Thunk Reducer */
@@ -76,28 +73,31 @@ const authSlice = createSlice({
         state.status = "LOADING";
       })
       .addCase(postSignUp.fulfilled, (state) => {
-        state.status = "COMPLETE";
+        console.log("postSignUp COMPLETE");
+        state.status = "postSignUp/COMPLETE";
       })
-      .addCase(postSignUp.rejected, (state) => {
+      .addCase(postSignUp.rejected, (state, { error: { message } }) => {
+        console.log("postSignUp FAIL .. ");
+        alert(message);
         state.status = "FAIL";
       });
 
     /* postSignIn Thunk Reducer */
     builder.addCase(postSignIn.pending, (state) => {
-      // console.`log`("postSignIn LOADING .. ");
+      // console.log("postSignIn LOADING .. ");
       state.status = "LOADING";
     });
     builder.addCase(
       postSignIn.fulfilled,
       (state, { payload: { access_token } }) => {
-        // console.`log`("postSignIn COMPLETE .. ");
+        // console.log("postSignIn COMPLETE .. ");
         localStorage.setItem("access_token", access_token);
         state.status = "postSignIn/COMPLETE";
       }
     );
     builder.addCase(postSignIn.rejected, (state, { message }) => {
-      // console.`log`("postSignIn FAIL .. ");
-      // console.`log`(message);
+      // console.log("postSignIn FAIL .. ");
+      // console.log(message);
       state.status = "FAIL";
     });
   },

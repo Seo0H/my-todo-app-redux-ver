@@ -81,7 +81,7 @@ const SigninForm = () => {
   // Thunk 로 분리 예정
   const onClick = async (e) => {
     const { email, password } = form;
-    e.preventDefault();
+    await e.preventDefault();
     dispatch(postSignIn({ email, password }));
   };
 

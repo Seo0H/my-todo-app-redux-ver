@@ -61,12 +61,11 @@ const SignupForm = () => {
       }
     }
 
+    //1. 유효성 검사 통과
+    //2. pwCheck 를 먼저 작성 후 pw 작성하는 경우
+    //   -> pwcheck 경고창 사라지게
+    //3. 다 유효성 통과한 이후 pw 수정해서 pwcheck와 맞지 않는 경우
     if (name === "password") {
-      //1. 유효성 검사 통과
-      //2. pwCheck 를 먼저 작성 후 pw 작성하는 경우
-      //   -> pwcheck 경고창 사라지게
-      //3. 다 유효성 통과한 이후 pw 수정해서 pwcheck와 맞지 않는 경우
-
       if (passwordExp.test(value)) {
         setPwMessage("");
         setPwIsValid(true);
@@ -113,12 +112,14 @@ const SignupForm = () => {
     const { email, password } = form;
     await e.preventDefault();
     dispatch(postSignUp({ email, password }));
-
-    if (status === "COMPLETE") {
-      alert("회원가입 성공");
-      navigate("/signup");
-    }
   };
+
+  useEffect(() => {
+    if (status === "postSignUp/COMPLETE") {
+      alert("회원가입 성공");
+      navigate("/signin");
+    }
+  }, [status]);
 
   return (
     <AuthForm
@@ -126,7 +127,6 @@ const SignupForm = () => {
       form={form}
       onChange={OnChange}
       onClick={onClick}
-
       //유효성 검사 관련 props
       isValid={isValid}
       emailMessage={emailMessage}
