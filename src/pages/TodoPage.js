@@ -1,12 +1,14 @@
 import BasicTemplate from "../components/common/BasicTemplate"
 import TodoListContainer from "../containers/todo/TodoListContainer";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const TodoPage = () => {
-  const JWT = localStorage.getItem("access_token") ? true : false;
-  if (!JWT) {
+
+  const navigate = useNavigate();
+  const hasJWT = localStorage.getItem("access_token") ? true : false;
+  if (!hasJWT) {
     alert("로그인 해주세요");
-    return <Navigate to="/signin" />
+    return <Navigate to={"/signin"} />
   }
 
   return (

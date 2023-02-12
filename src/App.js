@@ -14,7 +14,7 @@ function App() {
       />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/signin" element={<SigninPage />} />
-      <Route path="/todo" element={hasJWT ? <TodoPage /> : <Navigate to="/signin" />} />
+      <Route path="/todo" element={<TodoPage />} />
     </Routes>
   );
 }
