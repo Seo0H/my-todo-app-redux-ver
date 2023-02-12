@@ -7,13 +7,14 @@ import { BrowserRouter } from "react-router-dom";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import authReducer from "./modules/auth";
 import todoSlice from "./modules/todo";
+import authSlice from './modules/auth';
 
 const store = configureStore({
-  reducer: { authReducer, todoReducer: todoSlice.reducer },
+  reducer: { auth: authSlice.reducer, todo: todoSlice.reducer,  },
   devTools: composeWithDevTools(),
 });
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

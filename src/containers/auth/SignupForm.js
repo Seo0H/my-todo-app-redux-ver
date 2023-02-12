@@ -1,9 +1,11 @@
 import AuthForm from "../../components/auth/AuthForm";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeField } from "./../../modules/auth";
 import { signUpApi } from "../../lib/api/auth";
 import { useNavigate } from "react-router-dom";
+import { postSignUp } from "./../../modules/auth";
+import useAuthVaild from "../../lib/hooks/useAuthVaild";
 
 /**
  * @components `SignupForm` : `authReducer` 리덕스를 통해 정보를 받아오는 공간입니다.
@@ -11,59 +13,76 @@ import { useNavigate } from "react-router-dom";
  */
 const SignupForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const { form } = useSelector(({ authReducer }) => ({
-    form: authReducer.signUp,
+  const { form, status } = useSelector(({ auth }) => ({
+    form: auth.signUp,
+    status: auth.status,
   }));
 
-  // 여기 있는 action을 다 리듀서로 보내버리고싶은데 일단 나중에 구현
-
-  const emailFn = new RegExp("@");
-  const passwordFn = new RegExp("(?=.{8,})"); // 공백 제외 8자 이상
-
+  //유효성 검사 관련 handler
   const [emailIsValid, setEmailIsValid] = useState(false);
   const [pwisValid, setPwIsValid] = useState(false);
   const [pwisConfirmValid, setPwConfirmIsValid] = useState(false);
+
+  const [pwCheckTmp, setPwCheckTmp] = useState();
 
   const [emailMessage, setEmailMessage] = useState("");
   const [pwMessage, setPwMessage] = useState("");
   const [pwConfirmMessage, setpwConfirmMessage] = useState("");
 
+  // 회원가입 버튼 활성화 handler
   const [isValid, setIsValid] = useState(false);
-  let passwordTmp = "";
 
   // 회원가입 버튼 활성화 handler
   useEffect(() => {
     if (emailIsValid && pwisValid && pwisConfirmValid) setIsValid(true);
   }, [emailIsValid, pwisValid, pwisConfirmValid]);
 
-  // onChange handler
-  const onChange = (e) => {
+  const emailExp = new RegExp("@");
+  const passwordExp = new RegExp("(?=.{8,})");
+
+  // input 변화 감지 handler
+  const OnChange = (e) => {
     /**
      * @param {String} name : tag의 name을 의미합니다. email, password
      * @param {String} value : 사용자 input을 의미합니다.
      */
     const { name, value } = e.target;
 
+    // const message = useAuthVaild(name, value);
+
     if (name === "email") {
-      if (emailFn.test(value)) {
+      if (emailExp.test(value)) {
         setEmailIsValid(true);
         setEmailMessage("");
       } else {
         setEmailIsValid(false);
-        setEmailMessage("이메일에는 @를 포함해 작성해주세요");
+        setEmailMessage("이메일에는 @를 포함해 작성해주세요.");
       }
     }
 
     if (name === "password") {
-      if (passwordFn.test(value)) {
-        setPwIsValid(true);
+      //1. 유효성 검사 통과
+      //2. pwCheck 를 먼저 작성 후 pw 작성하는 경우
+      //   -> pwcheck 경고창 사라지게
+      //3. 다 유효성 통과한 이후 pw 수정해서 pwcheck와 맞지 않는 경우
+
+      if (passwordExp.test(value)) {
         setPwMessage("");
-        passwordTmp = value;
+        setPwIsValid(true);
       } else {
         setPwIsValid(false);
         setPwMessage("비밀번호는 8자 이상으로 작성해주세요.");
+      }
+
+      if (form.passwordConfirm === value) {
+        setPwIsValid(true);
+        setpwConfirmMessage("");
+        setPwMessage("");
+      }
+
+      if (value !== form.passwordConfirm) {
+        setpwConfirmMessage("입력하신 비밀번호와 같게 입력해주세요.");
       }
     }
 
@@ -77,6 +96,7 @@ const SignupForm = () => {
       }
     }
 
+    // 입력 변화 감지 dispatch
     dispatch(
       changeField({
         form: "signUp",
@@ -87,25 +107,25 @@ const SignupForm = () => {
   };
 
   // FORM Submit handler
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+
+  const onClick = async (e) => {
     const { email, password } = form;
-    signUpApi(email, password)
-      .then(() => {
-        alert("회원가입 성공");
-        navigate("/signin");
-      })
-      .catch((err) => {
-        alert(err.response.data.message);
-      });
+    await e.preventDefault();
+    dispatch(postSignUp({ email, password }));
+
+    if (status === "COMPLETE") {
+      alert("회원가입 성공");
+      navigate("/signup");
+    }
   };
 
   return (
     <AuthForm
       type="signup"
       form={form}
-      onChange={onChange}
-      onSubmit={onSubmit}
+      onChange={OnChange}
+      onClick={onClick}
 
       //유효성 검사 관련 props
       isValid={isValid}

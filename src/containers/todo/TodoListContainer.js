@@ -11,7 +11,9 @@ import {
   todoUpdate,
 } from "../../modules/todo";
 import { useCallback, useEffect } from "react";
-
+import TodoHeader from "./../../components/todo/TodoHeader";
+import { useNavigate } from "react-router-dom";
+import { changeSignInStatus } from "../../modules/auth";
 
 const TodoListBlock = styled.div`
   h3 {
@@ -30,10 +32,10 @@ const TodoListBlock = styled.div`
  */
 function TodoListContainer() {
   const dispatch = useDispatch();
-  const { todos, status, test } = useSelector((state) => ({
-    todos: state.todoReducer.todos,
-    status: state.todoReducer.status,
-    test: state,
+  const navigate = useNavigate();
+
+  const { todos } = useSelector(({ todo }) => ({
+    todos: todo.todos,
   }));
 
   /* first render */
@@ -69,8 +71,17 @@ function TodoListContainer() {
     [todos]
   );
 
+  const onLogount = (e) => {
+    localStorage.clear();
+    dispatch(changeSignInStatus());
+    alert("로그아웃되엇슴다");
+    navigate("/signin");
+    e.preventDefault();
+  };
+
   return (
     <TodoListBlock>
+      <TodoHeader onLogount={onLogount} />
       <h3>TO-DO List</h3>
       <TodoCreateBox onCreate={onCreate} />
       {todos.map((todo) => (

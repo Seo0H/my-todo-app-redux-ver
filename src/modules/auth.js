@@ -1,33 +1,48 @@
-import { createAction, handleActions } from "redux-actions";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { signUpApi, signInApi } from "../lib/api/auth";
+import { useNavigate } from "react-router-dom";
+import { createAction } from "redux-actions";
 import produce from "immer";
 
-/* Auth action type */
+/* authApi action type */
 const CHANGE_FIELD = "auth/CHANGE_FIELD";
-const INITIALIZE_FORM = "auth/INITIALIZE_FORM";
-const VAILD = "auth/VAILD";
 
-/**
- * @param {Object} form { signUp, singIn };
- * @param {Object} key { email, password, passwordConfirm };
- * @param {String} value user-input
- */
-export const changeField = createAction(
-  CHANGE_FIELD,
-  ({ form, key, value }) => ({
-    form,
-    key,
-    value,
-  })
+const POST_SIGNIN = "auth/POST_SIGNIN"; // 로그인
+const SIGNIN_SUCCESS = "auth/SIGNIN_SUCCESS"; // 로그인 성공
+const SIGNIN_ERROR = "auth/SIGNIN_ERROR"; // 로그인 실패
+
+const POST_SIGNUP = "auth/POST_SIGNUP"; // 회원가입
+const SIGNUP_SUCCESS = "auth/SIGNUP_SUCCESS"; // 회원가입 성공
+const SIGNUP_ERROR = "auth/SIGNUP_ERROR"; // 회원가입 실패
+
+const signInSuccess = createAction(SIGNIN_SUCCESS, (payload) => payload);
+const signInError = createAction(SIGNIN_ERROR, (payload) => payload);
+
+/* authApi Thunk Action */
+// 회원가입
+export const postSignUp = createAsyncThunk(
+  POST_SIGNUP,
+  async ({ email, password }) => {
+    try {
+      await signUpApi(email, password);
+    } catch (err) {
+      alert(err.response.data.message);
+    }
+  }
 );
 
-/**
- * @param {Object} valid = { {boolean} isvalid , {string} message }
- */
-export const actionValid = createAction(VAILD, ({ form, key, valid }) => ({
-  form,
-  key,
-  valid,
-}));
+// 로그인
+export const postSignIn = createAsyncThunk(
+  POST_SIGNIN,
+  async ({ email, password }) => {
+    try {
+      const { data: access_token } = await signInApi({ email, password });
+      return access_token;
+    } catch ({ error }) {
+      throw error;
+    }
+  }
+);
 
 const initialState = {
   signUp: {
@@ -39,27 +54,54 @@ const initialState = {
     email: "",
     password: "",
   },
-  valid: {
-    isValid: false,
-    message: "",
-  },
+  status: "",
 };
 
-/* auth reducer */
-const authReducer = handleActions(
-  {
-    [CHANGE_FIELD]: (state, { payload: { form, key, value } }) =>
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    changeField: (state, { payload: { form, key, value } }) =>
       produce(state, (draft) => {
         draft[form][key] = value;
       }),
-    [INITIALIZE_FORM]: (state, { payload: { payload: form } }) => ({
-      ...state,
-      [form]: initialState[form],
-      authError: null,
-    }),
-    [VAILD]: (state, { payload: { form, key, valid } }) => null,
+    changeSignInStatus: (state) => {
+      state.status = "signin"
+    }
   },
-  initialState
-);
+  extraReducers: (builder) => {
+    /* postSignUp Thunk Reducer */
+    builder
+      .addCase(postSignUp.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(postSignUp.fulfilled, (state) => {
+        state.status = "COMPLETE";
+      })
+      .addCase(postSignUp.rejected, (state) => {
+        state.status = "FAIL";
+      });
 
-export default authReducer;
+    /* postSignIn Thunk Reducer */
+    builder.addCase(postSignIn.pending, (state) => {
+      // console.`log`("postSignIn LOADING .. ");
+      state.status = "LOADING";
+    });
+    builder.addCase(
+      postSignIn.fulfilled,
+      (state, { payload: { access_token } }) => {
+        // console.`log`("postSignIn COMPLETE .. ");
+        localStorage.setItem("access_token", access_token);
+        state.status = "postSignIn/COMPLETE";
+      }
+    );
+    builder.addCase(postSignIn.rejected, (state, { message }) => {
+      // console.`log`("postSignIn FAIL .. ");
+      // console.`log`(message);
+      state.status = "FAIL";
+    });
+  },
+});
+
+export default authSlice;
+export const { changeField, changeSignInStatus } = authSlice.actions;

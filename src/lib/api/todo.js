@@ -6,7 +6,10 @@ export const createTodoApi = async (todo) => {
   await client.post("/todos", { todo: todo });
 };
 
-export const getTodosApi = async () => client.get("/todos");
+export const getTodosApi = async () => {
+  const response = await client.get("/todos");
+  return response;
+};
 
 export const updateTodoApi = async (id, todo, isCompleted) => {
   await client.put(`/todos/${id}`, { todo: todo, isCompleted: isCompleted });

@@ -1,24 +1,28 @@
 import { Link } from "react-router-dom";
-import { AuthFormBlock, Footer, StyledButton, StyledInput, WarnMessage } from "./style";
-
+import {
+  AuthFormBlock,
+  Footer,
+  StyledButton,
+  StyledInput,
+  WarnMessage,
+} from "./style";
 
 const textMap = {
   signup: "회원가입",
   signin: "로그인",
 };
 
-
 /**
  * @param {string} type : signup, signup 을 알려주는 매개 변수
  * @param {Object} form : email, password, passwordConfirm 의 값을 담고있는 매개 변수
  */
 const AuthForm = ({
-
   type,
   form,
 
   onChange,
-  onSubmit,
+  onClick,
+
   isValid,
   emailMessage,
   pwMessage,
@@ -29,7 +33,7 @@ const AuthForm = ({
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
-      <form onSubmit={onSubmit} method="post">
+      <form method="post">
         <StyledInput
           data-testid="email-input"
           autoComplete="email"
@@ -43,7 +47,7 @@ const AuthForm = ({
           data-testid="password-input"
           autoComplete="password"
           name="password"
-          type="password"
+          type="text"
           placeholder="비밀번호"
           defaltvalue={form.password}
           onChange={onChange}
@@ -55,7 +59,7 @@ const AuthForm = ({
               autoComplete="new-password"
               name="passwordConfirm"
               placeholder="비밀번호 확인"
-              type="password"
+              type="text"
               onChange={onChange}
               defaltvalue={form.passwordConfirm}
             />
@@ -67,7 +71,7 @@ const AuthForm = ({
 
         {type === "signup" ? (
           <StyledButton
-            onSubmit={onSubmit}
+            onClick={onClick}
             fullWidth
             data-testid="signup-button"
             {...(isValid ? {} : { disabled: true })}
@@ -76,7 +80,7 @@ const AuthForm = ({
           </StyledButton>
         ) : (
           <StyledButton
-            onSubmit={onSubmit}
+            onClick={onClick}
             fullWidth
             data-testid="signin-button"
             {...(isValid ? { disabled: false } : { disabled: true })}

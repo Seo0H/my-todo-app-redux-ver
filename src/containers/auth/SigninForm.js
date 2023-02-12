@@ -1,9 +1,9 @@
 import AuthForm from "../../components/auth/AuthForm";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeField } from "../../modules/auth";
-import { signInApi } from "./../../lib/api/auth";
+import { changeField, changeSignInStatus, postSignIn } from "../../modules/auth";
 import { useNavigate } from "react-router-dom";
+import useAuthVaild from "./../../lib/hooks/useAuthVaild";
 
 /**
  * @components `SigninForm` : `authReducer` 리덕스를 통해 정보를 받아오는 공간입니다.
@@ -13,15 +13,14 @@ const SigninForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { form } = useSelector(({ authReducer }) => ({
-    form: authReducer.singIn,
+  const { form, status } = useSelector(({ auth }) => ({
+    form: auth.singIn,
+    status: auth.status,
   }));
 
-  // 여기 있는 action을 다 리듀서로 보내버리고싶은데 일단 나중에 구현
-
-  // 유효성 검사 개체
-  const emailExp = new RegExp("@");
-  const passwordExp = new RegExp("(?=.{8,})");
+  useEffect(() => {
+    dispatch(changeSignInStatus());
+  }, []);
 
   //유효성 검사 관련 handler
   const [emailIsValid, setEmailIsValid] = useState(false);
@@ -36,33 +35,39 @@ const SigninForm = () => {
     if (emailIsValid && pwisValid) setIsValid(true);
   }, [emailIsValid, pwisValid]);
 
-  const onChange = (e) => {
+
+
+  // input 변화 감지 handler
+  const OnChange = (e) => {
     /**
-     * @param {String} name : 해당 tag의 name을 의미합니다. (email, password)
-     * @param {String} value : 사용자 input을 의미합니다.
+     * @param {String} name : tag name ('email' || 'password')
+     * @param {String} value : user input
      */
     const { name, value } = e.target;
+
+    const message = useAuthVaild(name, value);
+
     if (name === "email") {
-      if (emailExp.test(value)) {
+      if (!message) {
         setEmailIsValid(true);
         setEmailMessage("");
       } else {
         setEmailIsValid(false);
-        setEmailMessage("이메일에는 @를 포함해 작성해주세요");
+        setEmailMessage(message);
       }
     }
 
     if (name === "password") {
-      if (passwordExp.test(value)) {
+      if (!message) {
         setPwIsValid(true);
         setPwMessage("");
       } else {
         setPwIsValid(false);
-        setPwMessage("비밀번호는 8자 이상으로 작성해주세요.");
+        setPwMessage(message);
       }
     }
 
-    // 사용자 입력 변화 감지 dispatch
+    // 입력 변화 감지 dispatch
     dispatch(
       changeField({
         form: "singIn",
@@ -74,29 +79,26 @@ const SigninForm = () => {
 
   // FORM Submit handler
   // Thunk 로 분리 예정
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onClick = async (e) => {
     const { email, password } = form;
-    signInApi(email, password)
-      .then((res) => {
-        localStorage.setItem("access_token", res.data.access_token);
-        localStorage.setItem("User_id", email);
-        alert("로그인 성공");
-        navigate("/todo");
-      })
-      .catch((err) => {
-        alert(err.response.data.message);
-      });
+    e.preventDefault();
+    dispatch(postSignIn({ email, password }));
   };
+
+  useEffect(() => {
+    if (status === "postSignIn/COMPLETE") {
+      alert("로그인 성공");
+      navigate("/todo");
+    }
+  }, [status]);
 
   return (
     <>
       <AuthForm
         type="signin"
         form={form}
-        onChange={onChange}
-        onSubmit={onSubmit}
-
+        onChange={OnChange}
+        onClick={onClick}
         //유효성 검사 관련 props
         isValid={isValid}
         emailMessage={emailMessage}

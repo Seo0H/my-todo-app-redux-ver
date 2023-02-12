@@ -9,9 +9,15 @@ const TODO_REMOVE = "todo/TODO_REMOVE";
 const TODO_UPDATE = "todo/TODO_UPDATE";
 
 /* todo Thunk Action */
-export const getTodos = createAsyncThunk(GET_TODOS, async () =>
-  getTodosApi().then((res) => res.data)
-);
+export const getTodos = createAsyncThunk(GET_TODOS, async () => {
+  try {
+    const { data } = await getTodosApi();
+    return data;
+  } catch ({ error }) {
+    throw error;
+  }
+});
+
 export const todoRemove = createAsyncThunk(TODO_REMOVE, async (id) =>
   deleteTodoApi(id)
 );
@@ -20,7 +26,7 @@ export const todoCreate = createAsyncThunk(TODO_CREATE, async (text) =>
 );
 export const todoUpdate = createAsyncThunk(
   TODO_UPDATE,
-  async ({id, todo, isCompleted}) => updateTodoApi(id, todo, isCompleted)
+  async ({ id, todo, isCompleted }) => updateTodoApi(id, todo, isCompleted)
 );
 
 const initialState = { todos: [], status: "" };
@@ -42,53 +48,57 @@ const todoSlice = createSlice({
   },
   extraReducers: (builder) => {
     /* getTodos Thunk Reducer */
-    builder.addCase(getTodos.pending, (state) => {
-      state.status = "LOADING";
-    });
-    builder.addCase(getTodos.fulfilled, (state, { payload: todos }) => {
-      state.todos = [...todos];
-      state.status = "COMPLETE";
-    });
-    builder.addCase(getTodos.rejected, (state) => {
-      state.status = "FAIL";
-    });
+    builder
+      .addCase(getTodos.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(getTodos.fulfilled, (state, { payload: todos }) => {
+        // console.log("getTodos COMPLITE .. ");
+        state.todos = [...todos];
+        state.status = "COMPLETE";
+      })
+      .addCase(getTodos.rejected, (state, { message }) => {
+        // console.log("getTodos FAIL .. ");
+        // console.log(message);
+        state.status = "FAIL";
+      });
 
     /* todoRemove Thunk Reducer */
-    builder.addCase(todoRemove.pending, (state) => {
-      state.status = "LOADING";
-    });
-    builder.addCase(
-      todoRemove.fulfilled,
-      ({ todos, state }, { payload: id }) => {
+    builder
+      .addCase(todoRemove.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(todoRemove.fulfilled, ({ todos, state }, { payload: id }) => {
         todos.filter((todo) => todo.id !== id);
         state = "COMPLETE";
-      }
-    );
-    builder.addCase(todoRemove.rejected, (state) => {
-      state.status = "FAIL";
-    });
+      })
+      .addCase(todoRemove.rejected, (state) => {
+        state.status = "FAIL";
+      });
 
     /* todoCreate Thunk Reducer */
-    builder.addCase(todoCreate.pending, (state) => {
-      state.status = "LOADING";
-    });
-    builder.addCase(todoCreate.fulfilled, (state) => {
-      state.status = "COMPLETE";
-    });
-    builder.addCase(todoCreate.rejected, (state) => {
-      state.status = "FAIL";
-    });
+    builder
+      .addCase(todoCreate.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(todoCreate.fulfilled, (state) => {
+        state.status = "COMPLETE";
+      })
+      .addCase(todoCreate.rejected, (state) => {
+        state.status = "FAIL";
+      });
 
     /* todoUpdate Thunk Reducer */
-    builder.addCase(todoUpdate.pending, (state, ) => {
-      state.status = "LOADING";
-    });
-    builder.addCase(todoUpdate.fulfilled, (state) => {
-      state.status = "COMPLETE";
-    });
-    builder.addCase(todoUpdate.rejected, (state) => {
-      state.status = "FAIL";
-    });
+    builder
+      .addCase(todoUpdate.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(todoUpdate.fulfilled, (state) => {
+        state.status = "COMPLETE";
+      })
+      .addCase(todoUpdate.rejected, (state) => {
+        state.status = "FAIL";
+      });
   },
 });
 
