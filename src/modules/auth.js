@@ -80,22 +80,22 @@ const authSlice = createSlice({
         console.log("postSignUp FAIL .. ");
         alert(message);
         state.status = "FAIL";
-      });
+      })
 
     /* postSignIn Thunk Reducer */
-    builder.addCase(postSignIn.pending, (state) => {
+    .addCase(postSignIn.pending, (state) => {
       // console.log("postSignIn LOADING .. ");
       state.status = "LOADING";
-    });
-    builder.addCase(
+    })
+    .addCase(
       postSignIn.fulfilled,
       (state, { payload: { access_token } }) => {
         // console.log("postSignIn COMPLETE .. ");
         localStorage.setItem("access_token", access_token);
         state.status = "postSignIn/COMPLETE";
       }
-    );
-    builder.addCase(postSignIn.rejected, (state, { message }) => {
+    )
+    .addCase(postSignIn.rejected, (state, { message }) => {
       // console.log("postSignIn FAIL .. ");
       // console.log(message);
       state.status = "FAIL";
