@@ -81,7 +81,7 @@ const SigninForm = () => {
   // Thunk 로 분리 예정
   const onClick = async (e) => {
     const { email, password } = form;
-    await e.preventDefault();
+    e.preventDefault();
     dispatch(postSignIn({ email, password }));
   };
 
@@ -90,6 +90,11 @@ const SigninForm = () => {
       alert("로그인 성공");
       navigate("/todo");
     }
+
+    if (status === "postSignIn/FAIL") {
+      alert("해당 유저가 존재하지 않습니다.");
+    }
+
   }, [status]);
 
   return (

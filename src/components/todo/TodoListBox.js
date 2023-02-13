@@ -7,11 +7,7 @@ import { TodoBoxBlock, StyledButton, TodoListBlock } from "./style";
  * @props `onUpdate` : 수정(chekcBox, modify) handler
  * @props `onRemove` : 삭제 handler
  */
-function TodoListBox({
-  todo: { id, todo, isCompleted },
-  onUpdate,
-  onRemove,
-}) {
+function TodoListBox({ todo: { id, todo, isCompleted }, onUpdate, onRemove }) {
   /**
    * modifyMode : 수정 모드를 관리하는 변수
    * modifyVal: 수정된 text를 담는 변수
@@ -47,6 +43,7 @@ function TodoListBox({
         />
         <input
           type="text"
+          data-testid="modify-input"
           name="todo"
           autoComplete="off"
           defaultValue={todo}
@@ -57,6 +54,7 @@ function TodoListBox({
         {modifyMode ? (
           <>
             <StyledButton
+              data-testid="submit-button"
               name="modify-todo"
               onClick={(e) => {
                 onUpdate({ id, todo: inputRef.current.value, isCompleted });
@@ -66,13 +64,18 @@ function TodoListBox({
             >
               ✅확인
             </StyledButton>
-            <StyledButton name="cancel" onClick={(e) => onCancel(e)}>
+            <StyledButton
+              data-testid="cancel-button"
+              name="cancel"
+              onClick={(e) => onCancel(e)}
+            >
               ↪️ 취소
             </StyledButton>
           </>
         ) : (
           <>
             <StyledButton
+              data-testid="modify-button"
               onClick={(e) => {
                 setModifyMode(true);
                 e.preventDefault();
@@ -82,6 +85,7 @@ function TodoListBox({
               ✏️수정
             </StyledButton>
             <StyledButton
+              data-testid="delete-button"
               name="delete"
               onClick={(e) => {
                 onRemove(id, e);

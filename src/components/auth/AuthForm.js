@@ -47,7 +47,7 @@ const AuthForm = ({
           data-testid="password-input"
           autoComplete="password"
           name="password"
-          type="text"
+          type="password"
           placeholder="비밀번호"
           defaltvalue={form.password}
           onChange={onChange}
@@ -59,7 +59,7 @@ const AuthForm = ({
               autoComplete="new-password"
               name="passwordConfirm"
               placeholder="비밀번호 확인"
-              type="text"
+              type="password"
               onChange={onChange}
               defaltvalue={form.passwordConfirm}
             />

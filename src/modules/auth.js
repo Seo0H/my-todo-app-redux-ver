@@ -35,8 +35,8 @@ export const postSignIn = createAsyncThunk(
     try {
       const { data: access_token } = await signInApi({ email, password });
       return access_token;
-    } catch ({ error }) {
-      throw error;
+    } catch ({ response }) {
+      throw response.data;
     }
   }
 );
@@ -95,10 +95,10 @@ const authSlice = createSlice({
         state.status = "postSignIn/COMPLETE";
       }
     )
-    .addCase(postSignIn.rejected, (state, { message }) => {
+    .addCase(postSignIn.rejected, (state, { error: { message } }) => {
       // console.log("postSignIn FAIL .. ");
-      // console.log(message);
-      state.status = "FAIL";
+      console.log(message);
+      state.status = "postSignIn/FAIL";
     });
   },
 });
