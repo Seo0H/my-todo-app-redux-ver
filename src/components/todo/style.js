@@ -53,7 +53,11 @@ export const TodoListBlock = styled.label`
     width: 1rem;
     height: 1rem;
     margin-right: 0.5rem;
+    border: none;
     cursor: pointer;
+    &:checked{
+      color: ${palette.gray[9]};
+    }
   }
 
   input[type="text"] {
@@ -65,13 +69,18 @@ export const TodoListBlock = styled.label`
       outline: none;
     }
   }
+
+  input[type="checkbox"]:checked + input[type="text"] {
+    color: ${palette.gray[5]};
+    text-decoration: line-through;
+  }
 `;
 
 export const StyledButton = styled(Button)`
   margin-left: 0.25rem;
   height: 2rem;
   background: ${palette.gray[2]};
-  font-size: .9rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: ${palette.gray[8]};
   &:hover {

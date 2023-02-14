@@ -11,7 +11,7 @@ function TodoListBox({ todo: { id, todo, isCompleted }, onUpdate, onRemove }) {
   /**
    * modifyMode : 수정 모드를 관리하는 변수
    * modifyVal: 수정된 text를 담는 변수
-   * inputRef: input을 가리키는 참조 ref 수정 모드의 오토포커스를 관리하기 위해 사용.
+   * inputRef: input을 가리키는 참조 ref. 기본-수정모드 변화에 따른 상태를 관리하기 위해 사용.
    */
   const [modifyMode, setModifyMode] = useState(false);
   const inputRef = useRef();
@@ -24,7 +24,7 @@ function TodoListBox({ todo: { id, todo, isCompleted }, onUpdate, onRemove }) {
     setModifyMode(false);
     inputRef.current.value = todo;
     inputRef.current.disabled = true;
-    e.preventDefault(); // 이걸안해서 onClick bubbling 생김. 공부가 더 필요할듯
+    e.preventDefault();
   };
 
   if (modifyMode) inputRef.current.focus();
