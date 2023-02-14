@@ -1,5 +1,5 @@
 import BasicTemplate from "../components/common/BasicTemplate"
-import TodoListContainer from "../containers/todo/TodoListContainer";
+import TodoListForm from "../containers/todo/TodoListForm";
 import { Navigate, useNavigate } from 'react-router-dom';
 
 const TodoPage = () => {
@@ -13,7 +13,7 @@ const TodoPage = () => {
 
   return (
     <BasicTemplate whatIsType={"TO-DO"}>
-      <TodoListContainer />
+      <TodoListForm />
     </BasicTemplate>
   );
 };

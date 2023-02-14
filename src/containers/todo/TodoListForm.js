@@ -11,7 +11,7 @@ import {
   todoUpdate,
 } from "../../modules/todo";
 import { useCallback, useEffect } from "react";
-import TodoHeader from "./../../components/todo/TodoHeader";
+import TodoHeader from "../../components/todo/TodoHeader";
 import { useNavigate } from "react-router-dom";
 import { changeSignInStatus } from "../../modules/auth";
 
@@ -30,7 +30,7 @@ const TodoListBlock = styled.div`
  * @components `TodolistForm` : `todoReducer` 리덕스를 통해 정보를 받아오는 공간입니다.
  * `TodoForm`에서 필요한 정보를 disptch로 받아와 해당 컴포넌트에 props로 전달합니다.
  */
-function TodoListContainer() {
+function TodoListForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -96,4 +96,4 @@ function TodoListContainer() {
   );
 }
 
-export default TodoListContainer;
+export default TodoListForm;
